@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Student Achievement and Award Record System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f4f6f8; --surface: #ffffff; --ink: #18222f; --soft: #5d6b7c; --line: #dfe4ea;
+  --brand: #1f5f8b; --brand-ink: #ffffff; --brand-tint: #e6f0f7;
+  --side: #14324a; --side-ink: #d7e3ee;
+  --bronze: #a8692f; --silver: #7d8a9c; --gold: #b8901a; --platinum: #2f7f86;
+  --red: #b33a4a; --green: #2b8a5a;
+  color-scheme: light; box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg:#0f151d; --surface:#17202b; --ink:#e6ecf2; --soft:#9aa8b8; --line:#2a3644; --brand:#4d9bd0; --brand-ink:#0b1520; --brand-tint:#16304a; --side:#0b1218; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg:#0f151d; --surface:#17202b; --ink:#e6ecf2; --soft:#9aa8b8; --line:#2a3644; --brand:#4d9bd0; --brand-ink:#0b1520; --brand-tint:#16304a; --side:#0b1218; color-scheme: dark; }
+*, *::before, *::after { box-sizing: border-box; }
+html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
+body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); font: 15px/1.5 "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+h1, h2, h3 { margin: 0; line-height: 1.2; }
+p { margin: 0; }
+.hidden { display: none !important; }
+
+.btn { display: inline-flex; align-items: center; gap: .4rem; border: 0; border-radius: 8px; padding: .55rem .95rem; font-weight: 600; font-size: .9rem; cursor: pointer; }
+.btn-primary { background: var(--brand); color: var(--brand-ink); }
+.btn-outline { background: var(--surface); border: 1px solid var(--line); }
+.btn-ghost { background: transparent; color: var(--soft); padding: .4rem .6rem; }
+.btn-ghost:hover { color: var(--ink); background: var(--brand-tint); }
+.btn-danger { background: var(--red); color: #fff; }
+.btn-sm { padding: .35rem .5rem; font-size: .82rem; }
+.input { width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: .55rem .7rem; font-size: .92rem; }
+.input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-tint); }
+textarea.input { min-height: 80px; resize: vertical; }
+label.f { display: block; }
+label.f > span { display: block; font-size: .83rem; font-weight: 600; margin-bottom: .3rem; }
+label.f > span i { font-style: normal; font-weight: 400; color: var(--soft); }
+label.f small { display: block; font-size: .76rem; color: var(--red); margin-top: .25rem; min-height: 0; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .9rem; }
+@media (max-width: 600px) { .row2, .row3 { grid-template-columns: 1fr; } }
+
+/* login */
+.login { min-height: 100vh; display: grid; place-items: center; padding: 1.5rem; }
+.login-card { width: 100%; max-width: 400px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 2rem; }
+.login-card h1 { font-size: 1.45rem; margin-top: 1rem; }
+.login-card .sub { color: var(--soft); margin-top: .3rem; font-size: .92rem; }
+.login-card form { display: grid; gap: .9rem; margin-top: 1.4rem; }
+.alert { background: #fbebee; color: var(--red); border-radius: 8px; padding: .5rem .7rem; font-size: .86rem; }
+.logo { display: flex; align-items: center; gap: .6rem; font-weight: 800; }
+.logo-mark { width: 34px; height: 34px; border-radius: 9px; background: var(--brand); color: var(--brand-ink); display: grid; place-items: center; font-weight: 800; font-size: .95rem; flex: none; }
+
+/* shell */
+.shell { display: grid; grid-template-columns: 230px 1fr; min-height: 100vh; background: linear-gradient(to right, var(--side) 230px, transparent 230px); }
+aside.side { background: var(--side); color: var(--side-ink); padding: 1.2rem .9rem; display: flex; flex-direction: column; gap: 1.5rem; position: sticky; top: 0; height: 100vh; }
+aside.side .logo { color: #fff; font-size: .92rem; line-height: 1.2; padding: 0 .4rem; }
+aside.side .logo-mark { background: #f0b429; color: #14324a; }
+nav.menu { display: grid; gap: .2rem; }
+nav.menu button { text-align: left; background: none; border: 0; color: var(--side-ink); padding: .6rem .75rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; gap: .6rem; align-items: center; }
+nav.menu button svg { width: 18px; height: 18px; opacity: .85; }
+nav.menu button[aria-current="page"] { background: rgba(255,255,255,.12); color: #fff; }
+.side-user { margin-top: auto; font-size: .82rem; padding: .7rem .75rem; border-top: 1px solid rgba(255,255,255,.12); }
+.side-user b { display: block; color: #fff; }
+.side-user button { margin-top: .5rem; background: none; border: 1px solid rgba(255,255,255,.25); color: #fff; border-radius: 7px; padding: .3rem .7rem; font-size: .8rem; cursor: pointer; }
+main.content { padding: 1.6rem 2rem 3rem; min-width: 0; }
+.head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.3rem; }
+.head h1 { font-size: 1.55rem; font-weight: 800; }
+.head p { color: var(--soft); margin-top: .2rem; font-size: .92rem; }
+.head .actions { display: flex; gap: .5rem; }
+@media (max-width: 820px) {
+  .shell { grid-template-columns: 1fr; background: none; }
+  aside.side { position: static; height: auto; flex-direction: row; align-items: center; flex-wrap: wrap; gap: .6rem; padding: .7rem 1rem; }
+  nav.menu { display: flex; order: 3; width: 100%; overflow-x: auto; }
+  .side-user { margin: 0 0 0 auto; border: 0; padding: 0; }
+  .side-user b, .side-user span { display: none; }
+  .side-user button { margin: 0; }
+  main.content { padding: 1.2rem 1rem 3rem; }
+}
+
+/* cards */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.card-h { padding: .9rem 1.1rem; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.card-h h2 { font-size: 1rem; font-weight: 700; }
+.card-b { padding: 1rem 1.1rem; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1rem; }
+.stat { padding: 1rem 1.1rem; }
+.stat .v { font-size: 1.8rem; font-weight: 800; line-height: 1.1; margin-top: .2rem; }
+.stat .l { font-size: .84rem; color: var(--soft); }
+.grid-dash { display: grid; grid-template-columns: 1.55fr 1fr; gap: 1rem; }
+.stack { display: grid; gap: 1rem; align-content: start; }
+@media (max-width: 1000px) { .stats { grid-template-columns: 1fr 1fr; } .grid-dash { grid-template-columns: 1fr; } }
+
+/* tables */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+th, td { text-align: left; padding: .6rem .8rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-size: .76rem; color: var(--soft); font-weight: 600; background: color-mix(in oklab, var(--bg) 70%, var(--surface)); }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+td.title { white-space: normal; min-width: 170px; font-weight: 600; }
+td.wrap { white-space: normal; min-width: 140px; }
+tbody tr.click { cursor: pointer; }
+tbody tr.click:hover td { background: var(--brand-tint); }
+.rank { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--bg); font-weight: 700; font-size: .78rem; }
+.muted { color: var(--soft); }
+
+.tier { display: inline-flex; align-items: center; gap: .3rem; font-size: .76rem; font-weight: 700; padding: .15rem .55rem; border-radius: 999px; border: 1.5px solid currentColor; }
+.tier.Bronze { color: var(--bronze); } .tier.Silver { color: var(--silver); } .tier.Gold { color: var(--gold); } .tier.Platinum { color: var(--platinum); }
+.tier.None { color: var(--soft); border-style: dashed; font-weight: 500; }
+.tag { font-size: .76rem; padding: .12rem .5rem; border-radius: 6px; background: var(--bg); font-weight: 600; }
+
+/* bars */
+.bars { display: grid; gap: .55rem; }
+.bar { display: grid; grid-template-columns: 150px 1fr 34px; align-items: center; gap: .6rem; font-size: .84rem; }
+.bar .track { height: 10px; background: var(--bg); border-radius: 99px; overflow: hidden; }
+.bar .fill { height: 100%; background: var(--brand); border-radius: 99px; }
+.bar .n { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tiers { display: grid; grid-template-columns: repeat(4, 1fr); gap: .6rem; }
+.tier-box { border-radius: 10px; padding: .7rem; text-align: center; border: 1.5px solid currentColor; }
+.tier-box .v { font-size: 1.5rem; font-weight: 800; color: var(--ink); }
+.tier-box .l { font-size: .78rem; font-weight: 700; }
+.tier-box.Bronze { color: var(--bronze); } .tier-box.Silver { color: var(--silver); } .tier-box.Gold { color: var(--gold); } .tier-box.Platinum { color: var(--platinum); }
+.recent { list-style: none; margin: 0; padding: 0; }
+.recent li { display: flex; justify-content: space-between; gap: .8rem; padding: .6rem 0; border-bottom: 1px solid var(--line); font-size: .86rem; }
+.recent li:last-child { border-bottom: 0; }
+.recent b { display: block; }
+.pts { font-weight: 800; color: var(--brand); white-space: nowrap; }
+
+/* filters & pager */
+.filters { display: flex; gap: .5rem; flex-wrap: wrap; padding: .9rem 1.1rem; border-bottom: 1px solid var(--line); }
+.filters .input { width: auto; flex: 1 1 140px; }
+.filters .search { flex: 3 1 220px; }
+.filters input[type=date] { flex: 0 1 150px; }
+.pager { display: flex; justify-content: space-between; align-items: center; padding: .7rem 1.1rem; border-top: 1px solid var(--line); font-size: .84rem; color: var(--soft); }
+.pager div { display: flex; gap: .3rem; }
+
+/* profile */
+.profile { display: grid; grid-template-columns: 320px 1fr; gap: 1rem; align-items: start; }
+@media (max-width: 1000px) { .profile { grid-template-columns: 1fr; } }
+.kv { display: grid; gap: .6rem; font-size: .9rem; }
+.kv div { display: flex; justify-content: space-between; gap: 1rem; }
+.kv span { color: var(--soft); }
+.big-points { font-size: 2.6rem; font-weight: 800; line-height: 1; }
+.progress { height: 12px; background: var(--bg); border-radius: 99px; overflow: hidden; margin: .7rem 0 .4rem; }
+.progress div { height: 100%; background: var(--brand); }
+.timeline { list-style: none; margin: 0; padding: 0 0 0 1.1rem; border-left: 2px solid var(--line); }
+.timeline li { position: relative; padding: 0 0 1.1rem 1rem; }
+.timeline li::before { content: ""; position: absolute; left: -1.55rem; top: .35rem; width: 12px; height: 12px; border-radius: 50%; background: var(--brand); border: 3px solid var(--surface); box-shadow: 0 0 0 1px var(--line); }
+.timeline .d { font-size: .78rem; color: var(--soft); }
+.timeline .t { font-weight: 700; }
+.timeline .m { font-size: .84rem; color: var(--soft); margin-top: .1rem; }
+
+/* modal */
+.overlay { position: fixed; inset: 0; background: rgba(12, 20, 30, .45); display: flex; align-items: center; justify-content: center; padding: 1rem; z-index: 50; }
+.modal { background: var(--surface); width: 100%; max-width: 560px; max-height: 94vh; overflow-y: auto; border-radius: 14px; box-shadow: 0 24px 60px rgba(0,0,0,.25); }
+.modal-h { padding: 1rem 1.3rem; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.modal-h h2 { font-size: 1.1rem; }
+.modal-b { padding: 1.2rem 1.3rem; display: grid; gap: .9rem; }
+.modal-f { padding: .9rem 1.3rem; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: .5rem; }
+.preview { background: var(--brand-tint); border-radius: 10px; padding: .7rem .9rem; display: flex; justify-content: space-between; align-items: center; font-size: .88rem; }
+.preview b { font-size: 1.15rem; color: var(--brand); }
+.picker { position: relative; }
+.picker-list { position: absolute; left: 0; right: 0; top: 100%; margin-top: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 10px 24px rgba(0,0,0,.12); max-height: 200px; overflow-y: auto; z-index: 5; }
+.picker-list button { display: block; width: 100%; text-align: left; border: 0; background: none; padding: .5rem .7rem; cursor: pointer; font-size: .88rem; }
+.picker-list button:hover { background: var(--brand-tint); }
+.toast { position: fixed; bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: var(--side); color: #fff; padding: .6rem 1rem; border-radius: 8px; font-weight: 600; font-size: .9rem; z-index: 60; }
+.empty { padding: 2.5rem 1rem; text-align: center; color: var(--soft); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal"></div>
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+<script>
+"use strict";
+/* ---------- rules (same as backend/src/utils/scoring.js) ---------- */
+const CATEGORIES = { academic: "Academic", sports: "Sports", arts: "Arts", cultural: "Cultural", leadership: "Leadership", community: "Community Service", technology: "Technology", other: "Other" };
+const LEVELS = { school: "School", district: "District", state: "State", national: "National", international: "International" };
+const POSITIONS = { winner: "Winner", runner_up: "Runner-up", third: "Third Place", merit: "Merit", participation: "Participation" };
+const LEVEL_POINTS = { school: 10, district: 20, state: 40, national: 70, international: 100 };
+const POSITION_MULTIPLIER = { winner: 1, runner_up: 0.75, third: 0.5, merit: 0.4, participation: 0.25 };
+const TIERS = [["Platinum", 500], ["Gold", 300], ["Silver", 150], ["Bronze", 50]];
+const pointsFor = (level, position) => Math.round((LEVEL_POINTS[level] || 0) * (POSITION_MULTIPLIER[position] || 0));
+function tierFor(points) {
+  for (const [name, min] of TIERS) if (points >= min) return name;
+  return null;
+}
+function nextTier(points) {
+  const asc = [...TIERS].reverse();
+  const nxt = asc.find(([, min]) => points < min);
+  return nxt ? { name: nxt[0], min: nxt[1], needed: nxt[1] - points } : null;
+}
+
+/* ---------- storage ---------- */
+const KEY = "saars_db_v1";
+let db = null;
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch {} };
+const uid = () => Math.random().toString(36).slice(2, 10);
+async function sha(t) { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join(""); }
+
+async function load() {
+  try { const r = localStorage.getItem(KEY); if (r) { db = JSON.parse(r); return; } } catch {}
+  const salt = uid();
+  db = { users: [{ id: uid(), name: "Demo Staff", email: "staff@school.edu", salt, password: await sha(salt + ":staff123") }], students: [], achievements: [] };
+  const S = [
+    ["S1001", "Aarav Sharma", "12", "A"], ["S1002", "Diya Menon", "12", "B"], ["S1003", "Karthik Raj", "12", "A"],
+    ["S1004", "Meera Iyer", "11", "A"], ["S1005", "Rohan Das", "11", "B"], ["S1006", "Priya Nair", "11", "A"],
+    ["S1007", "Vikram Singh", "10", "B"], ["S1008", "Sneha Reddy", "10", "A"], ["S1009", "Arjun Kumar", "10", "A"],
+    ["S1010", "Lakshmi Pillai", "9", "B"], ["S1011", "Ananya Bose", "9", "A"], ["S1012", "Farhan Ali", "9", "B"],
+  ];
+  const ids = {};
+  S.forEach(([sid, name, grade, section], i) => {
+    const id = uid(); ids[sid] = id;
+    db.students.push({ id, studentId: sid, name, grade, section, email: name.split(" ")[0].toLowerCase() + "." + sid.toLowerCase() + "@school.edu", createdAt: "2026-06-0" + (1 + (i % 9)) });
+  });
+  const A = [
+    ["S1004", "State Athletics Meet - 400m", "sports", "state", "winner", "2026-08-14", "Athletics Federation"],
+    ["S1004", "National Athletics Championship - 400m", "sports", "national", "runner_up", "2026-10-05", "Athletics Federation of India"],
+    ["S1004", "District Science Exhibition", "academic", "district", "winner", "2026-07-20", "District Education Office"],
+    ["S1004", "Inter-school Debate Competition", "leadership", "school", "winner", "2026-06-12", "School Literary Club"],
+    ["S1005", "Robotics Challenge", "technology", "national", "runner_up", "2026-09-18", "National Robotics League"],
+    ["S1005", "State Coding Contest", "technology", "state", "winner", "2026-08-02", "State IT Council"],
+    ["S1005", "District Hackathon", "technology", "district", "runner_up", "2026-07-11", "District Tech Forum"],
+    ["S1005", "Innovation Challenge", "technology", "national", "merit", "2026-10-21", "Ministry of Education"],
+    ["S1005", "State Quiz Championship", "academic", "state", "winner", "2026-06-25", "State Quiz Society"],
+    ["S1011", "Science Olympiad", "academic", "international", "participation", "2026-09-27", "International Science Olympiad"],
+    ["S1011", "District Mathematics Olympiad", "academic", "district", "winner", "2026-07-30", "District Education Office"],
+    ["S1011", "Inter-house Art Competition", "arts", "school", "runner_up", "2026-06-18", "School Arts Club"],
+    ["S1001", "International Mathematics Olympiad", "academic", "international", "winner", "2026-07-15", "IMO Foundation"],
+    ["S1001", "National Coding Hackathon", "technology", "national", "winner", "2026-08-22", "Smart India Hackathon"],
+    ["S1001", "State Chess Championship", "sports", "state", "winner", "2026-06-08", "State Chess Association"],
+    ["S1001", "Model United Nations", "leadership", "national", "runner_up", "2026-09-05", "UN Youth Forum"],
+    ["S1001", "International Robotics Olympiad", "technology", "international", "runner_up", "2026-10-12", "World Robot Olympiad"],
+    ["S1001", "National Science Olympiad", "academic", "national", "winner", "2026-05-17", "Science Olympiad Foundation"],
+    ["S1001", "State Hackathon", "technology", "state", "winner", "2026-04-20", "State IT Council"],
+    ["S1001", "National Youth Parliament", "leadership", "national", "winner", "2026-10-25", "Ministry of Youth Affairs"],
+    ["S1002", "National Classical Dance Festival", "arts", "national", "winner", "2026-08-30", "Sangeet Natak Akademi"],
+    ["S1002", "State Kalotsav", "cultural", "state", "winner", "2026-07-08", "State Cultural Department"],
+    ["S1002", "International Art Competition", "arts", "international", "runner_up", "2026-09-14", "Global Arts Council"],
+    ["S1002", "District Painting Competition", "arts", "district", "winner", "2026-06-05", "District Arts Board"],
+    ["S1002", "State Music Competition", "cultural", "state", "runner_up", "2026-05-22", "State Music Academy"],
+    ["S1002", "International Dance Fest", "arts", "international", "merit", "2026-10-09", "World Dance Council"],
+    ["S1002", "NSS Special Camp", "community", "national", "winner", "2026-03-15", "National Service Scheme"],
+    ["S1003", "National Basketball Championship", "sports", "national", "runner_up", "2026-09-10", "Basketball Federation of India"],
+    ["S1003", "State Basketball Tournament", "sports", "state", "winner", "2026-07-26", "State Basketball Association"],
+    ["S1003", "District Football League", "sports", "district", "winner", "2026-06-14", "District Football Association"],
+    ["S1003", "State Science Fair", "academic", "state", "runner_up", "2026-05-09", "State Science Council"],
+    ["S1003", "National Robotics Meet", "technology", "national", "participation", "2026-10-18", "National Robotics League"],
+    ["S1006", "State Swimming Championship", "sports", "state", "winner", "2026-08-08", "State Aquatic Association"],
+    ["S1006", "National Swimming Championship", "sports", "national", "third", "2026-09-29", "Swimming Federation of India"],
+    ["S1006", "District Athletics Meet", "sports", "district", "winner", "2026-06-20", "District Sports Council"],
+    ["S1006", "Inter-school Essay Writing", "cultural", "school", "winner", "2026-05-12", "School Literary Club"],
+    ["S1007", "State Cricket Tournament", "sports", "state", "runner_up", "2026-08-17", "State Cricket Association"],
+    ["S1007", "District Chess Championship", "sports", "district", "winner", "2026-07-04", "District Chess Club"],
+    ["S1007", "School Sports Day - 100m", "sports", "school", "winner", "2026-10-03", "School Sports Committee"],
+    ["S1008", "International Science Olympiad", "academic", "international", "merit", "2026-08-25", "International Science Olympiad"],
+    ["S1008", "National Spelling Bee", "academic", "national", "winner", "2026-07-18", "National Spelling Bee Trust"],
+    ["S1008", "State Mathematics Olympiad", "academic", "state", "winner", "2026-06-28", "State Mathematics Society"],
+    ["S1008", "District Quiz Competition", "academic", "district", "winner", "2026-05-30", "District Education Office"],
+    ["S1008", "National Essay Competition", "cultural", "national", "runner_up", "2026-09-21", "National Book Trust"],
+    ["S1008", "State Elocution Contest", "cultural", "state", "winner", "2026-04-16", "State Cultural Department"],
+    ["S1008", "Clean Campus Drive", "community", "district", "winner", "2026-03-22", "District Collectorate"],
+    ["S1008", "Student Council Leadership", "leadership", "school", "winner", "2026-06-02", "School Administration"],
+    ["S1008", "State Youth Leadership Summit", "leadership", "state", "runner_up", "2026-10-15", "State Youth Board"],
+    ["S1009", "District Science Fair", "academic", "district", "runner_up", "2026-08-11", "District Education Office"],
+    ["S1009", "School Quiz Competition", "academic", "school", "winner", "2026-07-07", "School Quiz Club"],
+    ["S1010", "State Veena Competition", "arts", "state", "winner", "2026-08-19", "State Music Academy"],
+    ["S1010", "District Music Festival", "cultural", "district", "winner", "2026-06-23", "District Arts Board"],
+    ["S1012", "District Football Trials", "sports", "district", "participation", "2026-09-02", "District Football Association"],
+  ];
+  A.forEach(([sid, title, category, level, position, date, organizer], i) => {
+    db.achievements.push({ id: uid(), student: ids[sid], title, category, level, position, date, organizer, description: "", points: pointsFor(level, position), createdAt: date + "T10:" + String(i % 60).padStart(2, "0") + ":00" });
+  });
+  save();
+}
+
+/* ---------- helpers ---------- */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = d => new Date(d + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+const opts = (map, sel, ph) => (ph !== undefined ? `<option value="">${ph}</option>` : "") + Object.entries(map).map(([v, l]) => `<option value="${v}" ${v === sel ? "selected" : ""}>${l}</option>`).join("");
+const studentById = id => db.students.find(s => s.id === id);
+const totals = () => {
+  const t = {}; db.students.forEach(s => t[s.id] = { points: 0, count: 0 });
+  db.achievements.forEach(a => { if (t[a.student]) { t[a.student].points += a.points; t[a.student].count++; } });
+  return t;
+};
+const tierBadge = p => { const t = tierFor(p); return t ? `<span class="tier ${t}">${t}</span>` : `<span class="tier None">No tier</span>`; };
+const cls = s => `${esc(s.grade)}${s.section ? " - " + esc(s.section) : ""}`;
+let toastT;
+const toast = m => { const t = $("#toast"); t.textContent = m; t.classList.remove("hidden"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.add("hidden"), 2400); };
+const ICON = {
+  dash: '<svg viewBox="0 0 20 20" fill="currentColor"><path d="M3 3h6v8H3zM11 3h6v5h-6zM11 10h6v7h-6zM3 13h6v4H3z"/></svg>',
+  stu: '<svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 2 1 6.5 10 11l7-3.5V13h2V6.5L10 2Zm-5 8.3V14c0 1.7 2.2 3 5 3s5-1.3 5-3v-3.7l-5 2.5-5-2.5Z"/></svg>',
+  ach: '<svg viewBox="0 0 20 20" fill="currentColor"><path d="M5 2h10v3a5 5 0 0 1-4 4.9V12h3v2H6v-2h3V9.9A5 5 0 0 1 5 5V2Zm-3 1h2v2a2 2 0 0 0 1 1.7V9A4 4 0 0 1 2 5V3Zm16 0v2a4 4 0 0 1-3 4V6.7A2 2 0 0 0 16 5V3h2ZM5 16h10v2H5z"/></svg>',
+};
+
+/* ---------- state & render ---------- */
+const S = { user: null, view: "dashboard", profile: null, sq: "", sgrade: "", ssec: "", ssort: "name", spage: 1, af: { q: "", category: "", level: "", position: "", from: "", to: "" }, apage: 1 };
+
+function render() {
+  const app = $("#app");
+  if (!S.user) { app.innerHTML = loginView(); bindLogin(); return; }
+  const nav = [["dashboard", "Dashboard", ICON.dash], ["students", "Students", ICON.stu], ["achievements", "Achievements", ICON.ach]];
+  const cur = S.view === "profile" ? "students" : S.view;
+  app.innerHTML = `<div class="shell">
+    <aside class="side">
+      <div class="logo"><span class="logo-mark">SA</span><span>Student Achievement &amp; Award Records</span></div>
+      <nav class="menu" aria-label="Main">${nav.map(([v, l, i]) => `<button data-nav="${v}" ${cur === v ? 'aria-current="page"' : ""}>${i}${l}</button>`).join("")}</nav>
+      <div class="side-user"><b>${esc(S.user.name)}</b><span>${esc(S.user.email)}</span><br><button id="logout">Sign out</button></div>
+    </aside>
+    <main class="content">${({ dashboard: dashView, students: studentsView, achievements: achView, profile: profileView })[S.view]()}</main>
+  </div>`;
+  app.querySelectorAll("[data-nav]").forEach(b => b.onclick = () => { S.view = b.dataset.nav; render(); });
+  $("#logout").onclick = () => { S.user = null; try { sessionStorage.removeItem("saars_user"); } catch {} render(); };
+  bindView();
+}
+
+/* login */
+function loginView() {
+  return `<div class="login"><div class="login-card">
+    <div class="logo"><span class="logo-mark">SA</span><span>Student Achievement and Award Record System</span></div>
+    <h1>Staff sign in</h1><p class="sub">Sign in to manage student achievements and awards.</p>
+    <form id="lf" novalidate>
+      <label class="f"><span>Email</span><input class="input" name="email" type="email" value="staff@school.edu" autocomplete="username"></label>
+      <label class="f"><span>Password</span><input class="input" name="password" type="password" value="staff123" autocomplete="current-password"></label>
+      <p class="alert hidden" id="le" role="alert"></p>
+      <button class="btn btn-primary" style="justify-content:center">Sign in</button>
+    </form>
+    <p class="sub" style="margin-top:1rem;font-size:.8rem">Demo account: staff@school.edu / staff123</p>
+  </div></div>`;
+}
+function bindLogin() {
+  $("#lf").onsubmit = async e => {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(e.target));
+    const u = db.users.find(x => x.email === f.email.trim().toLowerCase());
+    if (!u || await sha(u.salt + ":" + f.password) !== u.password) { const el = $("#le"); el.textContent = "Email or password is incorrect."; el.classList.remove("hidden"); return; }
+    S.user = { id: u.id, name: u.name, email: u.email };
+    try { sessionStorage.setItem("saars_user", u.id); } catch {}
+    S.view = "dashboard"; render();
+  };
+}
+
+/* dashboard */
+function dashView() {
+  const t = totals();
+  const month = new Date().toISOString().slice(0, 7);
+  const thisMonth = db.achievements.filter(a => a.date.startsWith(month)).length;
+  const totalPts = db.achievements.reduce((s, a) => s + a.points, 0);
+  const board = db.students.map(s => ({ s, ...t[s.id] })).sort((a, b) => b.points - a.points || a.s.name.localeCompare(b.s.name)).slice(0, 10);
+  const tierCount = n => db.students.filter(s => tierFor(t[s.id].points) === n).length;
+  const byCat = Object.keys(CATEGORIES).map(k => [CATEGORIES[k], db.achievements.filter(a => a.category === k).length]).filter(x => x[1]).sort((a, b) => b[1] - a[1]);
+  const byLvl = Object.keys(LEVELS).map(k => [LEVELS[k], db.achievements.filter(a => a.level === k).length]);
+  const bars = rows => { const m = Math.max(1, ...rows.map(r => r[1])); return `<div class="bars">${rows.map(([l, n]) => `<div class="bar"><span>${l}</span><div class="track"><div class="fill" style="width:${n / m * 100}%"></div></div><span class="n">${n}</span></div>`).join("")}</div>`; };
+  const recent = [...db.achievements].sort((a, b) => b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt)).slice(0, 6);
+  return `
+    <div class="head"><div><h1>Dashboard</h1><p>Summary of student achievements and awards.</p></div>
+      <div class="actions"><button class="btn btn-primary" data-add-ach>+ Record achievement</button></div></div>
+    <div class="stats">
+      <div class="card stat"><div class="l">Total students</div><div class="v">${db.students.length}</div></div>
+      <div class="card stat"><div class="l">Total achievements</div><div class="v">${db.achievements.length}</div></div>
+      <div class="card stat"><div class="l">Achievements this month</div><div class="v">${thisMonth}</div></div>
+      <div class="card stat"><div class="l">Total points awarded</div><div class="v">${totalPts.toLocaleString("en-IN")}</div></div>
+    </div>
+    <div class="grid-dash">
+      <div class="stack">
+        <section class="card"><div class="card-h"><h2>Leaderboard – top 10</h2></div>
+          <div class="table-wrap"><table><thead><tr><th>#</th><th>Student</th><th>Class</th><th class="num">Achievements</th><th class="num">Points</th><th>Tier</th></tr></thead>
+          <tbody>${board.map((r, i) => `<tr class="click" data-profile="${r.s.id}"><td><span class="rank">${i + 1}</span></td><td><b>${esc(r.s.name)}</b> <span class="muted">${esc(r.s.studentId)}</span></td><td>${cls(r.s)}</td><td class="num">${r.count}</td><td class="num"><b>${r.points}</b></td><td>${tierBadge(r.points)}</td></tr>`).join("")}</tbody></table></div>
+        </section>
+        <section class="card"><div class="card-h"><h2>Achievements by category</h2></div><div class="card-b">${bars(byCat)}</div></section>
+      </div>
+      <div class="stack">
+        <section class="card"><div class="card-h"><h2>Students in each award tier</h2></div><div class="card-b"><div class="tiers">
+          ${["Bronze", "Silver", "Gold", "Platinum"].map(n => `<div class="tier-box ${n}"><div class="v">${tierCount(n)}</div><div class="l">${n}</div></div>`).join("")}
+        </div></div></section>
+        <section class="card"><div class="card-h"><h2>Achievements by level</h2></div><div class="card-b">${bars(byLvl)}</div></section>
+        <section class="card"><div class="card-h"><h2>Recent achievements</h2></div><div class="card-b" style="padding-top:.3rem;padding-bottom:.3rem"><ul class="recent">
+          ${recent.map(a => { const s = studentById(a.student); return `<li><div><b>${esc(a.title)}</b><span class="muted">${esc(s?.name)} · ${LEVELS[a.level]} · ${POSITIONS[a.position]} · ${fmt(a.date)}</span></div><span class="pts">+${a.points}</span></li>`; }).join("")}
+        </ul></div></section>
+      </div>
+    </div>`;
+}
+
+/* students */
+const PAGE_S = 20, PAGE_A = 25;
+function studentRows() {
+  const t = totals(), q = S.sq.trim().toLowerCase();
+  let rows = db.students.filter(s => (!q || s.name.toLowerCase().includes(q) || s.studentId.toLowerCase().includes(q)) && (!S.sgrade || s.grade === S.sgrade) && (!S.ssec || s.section === S.ssec)).map(s => ({ s, ...t[s.id] }));
+  const sorts = { name: (a, b) => a.s.name.localeCompare(b.s.name), points: (a, b) => b.points - a.points, id: (a, b) => a.s.studentId.localeCompare(b.s.studentId), count: (a, b) => b.count - a.count };
+  return rows.sort(sorts[S.ssort]);
+}
+function studentsView() {
+  const grades = [...new Set(db.students.map(s => s.grade))].sort((a, b) => b - a), secs = [...new Set(db.students.map(s => s.section).filter(Boolean))].sort();
+  return `
+    <div class="head"><div><h1>Students</h1><p>${db.students.length} student profiles.</p></div>
+      <div class="actions"><button class="btn btn-primary" id="add-stu">+ Add student</button></div></div>
+    <section class="card">
+      <div class="filters" id="sf">
+        <input class="input search" name="sq" value="${esc(S.sq)}" placeholder="Search by name or student ID" aria-label="Search students">
+        <select class="input" name="sgrade" aria-label="Grade"><option value="">All grades</option>${grades.map(g => `<option ${g === S.sgrade ? "selected" : ""} value="${g}">Grade ${g}</option>`).join("")}</select>
+        <select class="input" name="ssec" aria-label="Section"><option value="">All sections</option>${secs.map(g => `<option ${g === S.ssec ? "selected" : ""}>${g}</option>`).join("")}</select>
+        <select class="input" name="ssort" aria-label="Sort">${opts({ name: "Sort: Name", points: "Sort: Points (high to low)", id: "Sort: Student ID", count: "Sort: Achievements" }, S.ssort)}</select>
+      </div>
+      <div id="stable">${studentTable()}</div>
+    </section>`;
+}
+function studentTable() {
+  const rows = studentRows(), pages = Math.max(1, Math.ceil(rows.length / PAGE_S)); S.spage = Math.min(S.spage, pages);
+  const slice = rows.slice((S.spage - 1) * PAGE_S, S.spage * PAGE_S);
+  if (!rows.length) return `<div class="empty">No students match this search.</div>`;
+  return `<div class="table-wrap"><table><thead><tr><th>Student ID</th><th>Name</th><th>Class</th><th class="num">Achievements</th><th class="num">Total points</th><th>Award tier</th><th></th></tr></thead>
+    <tbody>${slice.map(r => `<tr class="click" data-profile="${r.s.id}"><td>${esc(r.s.studentId)}</td><td><b>${esc(r.s.name)}</b></td><td>${cls(r.s)}</td><td class="num">${r.count}</td><td class="num"><b>${r.points}</b></td><td>${tierBadge(r.points)}</td>
+      <td class="num"><button class="btn btn-ghost btn-sm" data-edit-stu="${r.s.id}">Edit</button><button class="btn btn-ghost btn-sm" data-del-stu="${r.s.id}">Delete</button></td></tr>`).join("")}</tbody></table></div>
+    ${pager(S.spage, pages, rows.length, PAGE_S, "s")}`;
+}
+function pager(p, pages, n, size, k) {
+  return `<div class="pager"><span>Showing ${(p - 1) * size + 1}–${Math.min(p * size, n)} of ${n}</span><div>
+    <button class="btn btn-outline btn-sm" data-page="${k}:${p - 1}" ${p <= 1 ? "disabled" : ""}>Previous</button>
+    <span style="padding:.35rem .5rem">Page ${p} of ${pages}</span>
+    <button class="btn btn-outline btn-sm" data-page="${k}:${p + 1}" ${p >= pages ? "disabled" : ""}>Next</button></div></div>`;
+}
+
+/* achievements */
+function achRows() {
+  const f = S.af, q = f.q.trim().toLowerCase();
+  return db.achievements.filter(a => {
+    const s = studentById(a.student);
+    if (f.category && a.category !== f.category) return false;
+    if (f.level && a.level !== f.level) return false;
+    if (f.position && a.position !== f.position) return false;
+    if (f.from && a.date < f.from) return false;
+    if (f.to && a.date > f.to) return false;
+    if (q && ![a.title, a.organizer, s?.name, s?.studentId].join(" ").toLowerCase().includes(q)) return false;
+    return true;
+  }).sort((a, b) => b.date.localeCompare(a.date));
+}
+function achView() {
+  const f = S.af;
+  return `
+    <div class="head"><div><h1>Achievements</h1><p>${db.achievements.length} achievements recorded. Points are calculated automatically.</p></div>
+      <div class="actions"><button class="btn btn-outline" id="export">Export CSV</button><button class="btn btn-primary" data-add-ach>+ Record achievement</button></div></div>
+    <section class="card">
+      <div class="filters" id="af">
+        <input class="input search" name="q" value="${esc(f.q)}" placeholder="Search title, organizer or student" aria-label="Search achievements">
+        <select class="input" name="category" aria-label="Category">${opts(CATEGORIES, f.category, "All categories")}</select>
+        <select class="input" name="level" aria-label="Level">${opts(LEVELS, f.level, "All levels")}</select>
+        <select class="input" name="position" aria-label="Result">${opts(POSITIONS, f.position, "All results")}</select>
+        <input class="input" type="date" name="from" value="${f.from}" aria-label="From date" title="From date">
+        <input class="input" type="date" name="to" value="${f.to}" aria-label="To date" title="To date">
+      </div>
+      <div id="atable">${achTable()}</div>
+    </section>`;
+}
+function achTable() {
+  const rows = achRows(), pages = Math.max(1, Math.ceil(rows.length / PAGE_A)); S.apage = Math.min(S.apage, pages);
+  if (!rows.length) return `<div class="empty">No achievements match these filters.</div>`;
+  const slice = rows.slice((S.apage - 1) * PAGE_A, S.apage * PAGE_A);
+  return `<div class="table-wrap"><table><thead><tr><th>Date</th><th>Title</th><th>Category</th><th>Organizer</th><th>Student</th><th>Level</th><th>Result</th><th class="num">Points</th><th></th></tr></thead>
+    <tbody>${slice.map(a => { const s = studentById(a.student); return `<tr><td>${fmt(a.date)}</td><td class="title">${esc(a.title)}</td><td><span class="tag">${CATEGORIES[a.category]}</span></td><td class="wrap">${esc(a.organizer) || '<span class="muted">—</span>'}</td><td>${esc(s?.name)} <span class="muted">${esc(s?.studentId)}</span></td><td>${LEVELS[a.level]}</td><td>${POSITIONS[a.position]}</td><td class="num"><b>${a.points}</b></td>
+      <td class="num"><button class="btn btn-ghost btn-sm" data-edit-ach="${a.id}">Edit</button><button class="btn btn-ghost btn-sm" data-del-ach="${a.id}">Delete</button></td></tr>`; }).join("")}</tbody></table></div>
+    ${pager(S.apage, pages, rows.length, PAGE_A, "a")}`;
+}
+
+/* profile */
+function profileView() {
+  const s = studentById(S.profile); if (!s) { S.view = "students"; return studentsView(); }
+  const list = db.achievements.filter(a => a.student === s.id).sort((a, b) => b.date.localeCompare(a.date));
+  const pts = list.reduce((x, a) => x + a.points, 0), tier = tierFor(pts), nxt = nextTier(pts);
+  const prevMin = tier ? TIERS.find(t => t[0] === tier)[1] : 0;
+  const pct = nxt ? Math.round((pts - prevMin) / (nxt.min - prevMin) * 100) : 100;
+  return `
+    <div class="head"><div><p><button class="btn btn-ghost btn-sm" data-nav="students" style="margin-left:-.6rem">← Students</button></p><h1>${esc(s.name)}</h1><p>${esc(s.studentId)} · Grade ${cls(s)}</p></div>
+      <div class="actions"><button class="btn btn-outline" data-edit-stu="${s.id}">Edit student</button><button class="btn btn-primary" data-add-ach="${s.id}">+ Record achievement</button></div></div>
+    <div class="profile">
+      <div class="stack">
+        <section class="card"><div class="card-b">
+          <div class="muted" style="font-size:.84rem">Total points</div>
+          <div style="display:flex;align-items:center;gap:.8rem;margin-top:.3rem"><span class="big-points">${pts}</span>${tierBadge(pts)}</div>
+          <div class="progress" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><div style="width:${pct}%"></div></div>
+          <p class="muted" style="font-size:.84rem">${nxt ? `<b style="color:var(--ink)">${nxt.needed} points</b> to reach ${nxt.name} (${nxt.min} points)` : "Highest tier reached"}</p>
+        </div></section>
+        <section class="card"><div class="card-h"><h2>Student details</h2></div><div class="card-b kv">
+          <div><span>Student ID</span><b>${esc(s.studentId)}</b></div>
+          <div><span>Grade</span><b>${esc(s.grade)}</b></div>
+          <div><span>Section</span><b>${esc(s.section) || "—"}</b></div>
+          <div><span>Email</span><b>${esc(s.email) || "—"}</b></div>
+          <div><span>Achievements</span><b>${list.length}</b></div>
+        </div></section>
+      </div>
+      <section class="card"><div class="card-h"><h2>Achievement timeline</h2></div><div class="card-b">
+        ${list.length ? `<ul class="timeline">${list.map(a => `<li><div class="d">${fmt(a.date)}</div><div style="display:flex;justify-content:space-between;gap:1rem"><span class="t">${esc(a.title)}</span><span class="pts">+${a.points} pts</span></div>
+          <div class="m">${CATEGORIES[a.category]} · ${LEVELS[a.level]} level · ${POSITIONS[a.position]}${a.organizer ? " · " + esc(a.organizer) : ""}</div></li>`).join("")}</ul>`
+          : `<div class="empty">No achievements recorded yet.</div>`}
+      </div></section>
+    </div>`;
+}
+
+/* bindings */
+let debounce;
+function bindView() {
+  const c = $("main.content");
+  c.querySelectorAll("[data-nav]").forEach(b => b.onclick = () => { S.view = b.dataset.nav; render(); });
+  c.onclick = e => {
+    const t = e.target.closest("button, tr");
+    if (!t) return;
+    if (t.matches("[data-edit-stu]")) return studentForm(studentById(t.dataset.editStu));
+    if (t.matches("[data-del-stu]")) return confirmDel("student", t.dataset.delStu);
+    if (t.matches("[data-edit-ach]")) return achForm(db.achievements.find(a => a.id === t.dataset.editAch));
+    if (t.matches("[data-del-ach]")) return confirmDel("achievement", t.dataset.delAch);
+    if (t.matches("[data-add-ach]")) return achForm(null, t.dataset.addAch || null);
+    if (t.matches("[data-page]")) { const [k, p] = t.dataset.page.split(":"); if (k === "s") { S.spage = +p; $("#stable").innerHTML = studentTable(); } else { S.apage = +p; $("#atable").innerHTML = achTable(); } return; }
+    if (t.id === "add-stu") return studentForm(null);
+    if (t.id === "export") return exportCSV();
+    if (t.matches("tr[data-profile]")) { S.profile = t.dataset.profile; S.view = "profile"; render(); }
+  };
+  const sf = $("#sf");
+  if (sf) sf.oninput = e => { S[e.target.name] = e.target.value; S.spage = 1; clearTimeout(debounce); debounce = setTimeout(() => { $("#stable").innerHTML = studentTable(); }, e.target.name === "sq" ? 300 : 0); };
+  const af = $("#af");
+  if (af) af.oninput = e => { S.af[e.target.name] = e.target.value; S.apage = 1; clearTimeout(debounce); debounce = setTimeout(() => { $("#atable").innerHTML = achTable(); }, e.target.name === "q" ? 300 : 0); };
+}
+
+/* modals */
+function modal(title, body, submitLabel, onSubmit, danger) {
+  $("#modal").innerHTML = `<div class="overlay" id="ov"><form class="modal" role="dialog" aria-modal="true" aria-labelledby="mt" novalidate>
+    <div class="modal-h"><h2 id="mt">${title}</h2><button type="button" class="btn btn-ghost" data-close aria-label="Close">✕</button></div>
+    <div class="modal-b">${body}</div>
+    <div class="modal-f"><button type="button" class="btn btn-outline" data-close>Cancel</button><button class="btn ${danger ? "btn-danger" : "btn-primary"}">${submitLabel}</button></div></form></div>`;
+  const m = $("#modal form");
+  $("#ov").addEventListener("mousedown", e => { if (e.target.id === "ov") close(); });
+  m.querySelectorAll("[data-close]").forEach(b => b.onclick = close);
+  m.onsubmit = e => { e.preventDefault(); onSubmit(m); };
+  const first = m.querySelector(".modal-b input, .modal-b select"); first && first.focus();
+  return m;
+}
+const close = () => { $("#modal").innerHTML = ""; };
+document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+const showErr = (m, errs) => { m.querySelectorAll("[data-err]").forEach(s => s.textContent = errs[s.dataset.err] || ""); };
+
+function studentForm(s) {
+  const edit = !!s; s = s || {};
+  modal(edit ? "Edit student" : "Add student", `
+    <div class="row2">
+      <label class="f"><span>Student ID</span><input class="input" name="studentId" value="${esc(s.studentId)}" maxlength="30" placeholder="e.g. S1013"><small data-err="studentId"></small></label>
+      <label class="f"><span>Full name</span><input class="input" name="name" value="${esc(s.name)}" maxlength="100"><small data-err="name"></small></label>
+    </div>
+    <div class="row2">
+      <label class="f"><span>Grade</span><input class="input" name="grade" value="${esc(s.grade)}" maxlength="20" placeholder="e.g. 11"><small data-err="grade"></small></label>
+      <label class="f"><span>Section <i>(optional)</i></span><input class="input" name="section" value="${esc(s.section)}" maxlength="10" placeholder="e.g. A"><small data-err="section"></small></label>
+    </div>
+    <label class="f"><span>Email <i>(optional)</i></span><input class="input" name="email" type="email" value="${esc(s.email)}"><small data-err="email"></small></label>`,
+    edit ? "Save changes" : "Add student", m => {
+      const d = Object.fromEntries(new FormData(m));
+      const v = { studentId: d.studentId.trim().toUpperCase(), name: d.name.trim(), grade: d.grade.trim(), section: d.section.trim().toUpperCase(), email: d.email.trim().toLowerCase() };
+      const errs = {};
+      if (!v.studentId) errs.studentId = "Student ID is required."; else if (db.students.some(x => x.studentId === v.studentId && x.id !== s.id)) errs.studentId = "That student ID is already in use.";
+      if (!v.name) errs.name = "Full name is required.";
+      if (!v.grade) errs.grade = "Grade is required.";
+      if (v.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)) errs.email = "Enter a valid email address.";
+      if (Object.keys(errs).length) return showErr(m, errs);
+      if (edit) Object.assign(s, v); else db.students.push({ id: uid(), ...v, createdAt: new Date().toISOString() });
+      save(); close(); render(); toast(edit ? "Student updated" : "Student added");
+    });
+}
+
+function achForm(a, presetStudent) {
+  const edit = !!a; a = a || { student: presetStudent || "", category: "", level: "", position: "", date: new Date().toISOString().slice(0, 10) };
+  const st = studentById(a.student);
+  const m = modal(edit ? "Edit achievement" : "Record achievement", `
+    <label class="f"><span>Student</span><div class="picker">
+      <input class="input" id="spick" placeholder="Search by name or student ID" autocomplete="off" value="${st ? esc(st.name + " (" + st.studentId + ")") : ""}">
+      <input type="hidden" name="student" value="${esc(a.student)}"><div class="picker-list hidden" id="plist"></div></div><small data-err="student"></small></label>
+    <label class="f"><span>Title</span><input class="input" name="title" maxlength="150" value="${esc(a.title)}" placeholder="e.g. State Athletics Meet - 400m"><small data-err="title"></small></label>
+    <div class="row3">
+      <label class="f"><span>Category</span><select class="input" name="category">${opts(CATEGORIES, a.category, "Select")}</select><small data-err="category"></small></label>
+      <label class="f"><span>Level</span><select class="input" name="level">${opts(LEVELS, a.level, "Select")}</select><small data-err="level"></small></label>
+      <label class="f"><span>Result</span><select class="input" name="position">${opts(POSITIONS, a.position, "Select")}</select><small data-err="position"></small></label>
+    </div>
+    <div class="row2">
+      <label class="f"><span>Date</span><input class="input" type="date" name="date" value="${a.date}"><small data-err="date"></small></label>
+      <label class="f"><span>Organizer <i>(optional)</i></span><input class="input" name="organizer" maxlength="150" value="${esc(a.organizer)}"></label>
+    </div>
+    <label class="f"><span>Notes <i>(optional)</i></span><textarea class="input" name="description" maxlength="1000">${esc(a.description)}</textarea></label>
+    <div class="preview" id="pv"></div>`,
+    edit ? "Save changes" : "Save achievement", m => {
+      const d = Object.fromEntries(new FormData(m)), errs = {};
+      if (!studentById(d.student)) errs.student = "Choose a student from the list.";
+      if (!d.title.trim()) errs.title = "Title is required.";
+      if (!CATEGORIES[d.category]) errs.category = "Select a category.";
+      if (!LEVELS[d.level]) errs.level = "Select a level.";
+      if (!POSITIONS[d.position]) errs.position = "Select a result.";
+      if (!d.date) errs.date = "Date is required.";
+      if (Object.keys(errs).length) return showErr(m, errs);
+      const v = { student: d.student, title: d.title.trim(), category: d.category, level: d.level, position: d.position, date: d.date, organizer: d.organizer.trim(), description: d.description.trim(), points: pointsFor(d.level, d.position) };
+      if (edit) Object.assign(a, v); else db.achievements.push({ id: uid(), ...v, createdAt: new Date().toISOString() });
+      save(); close(); render(); toast(edit ? "Achievement updated" : `Achievement saved: ${v.points} points`);
+    });
+  const pv = $("#pv", m);
+  const upd = () => {
+    const l = m.level.value, p = m.position.value;
+    pv.innerHTML = l && p ? `<span>${LEVELS[l]} (${LEVEL_POINTS[l]}) × ${POSITIONS[p]} (${POSITION_MULTIPLIER[p]})</span><b>${pointsFor(l, p)} points</b>` : `<span>Select a level and result to see the points.</span><b>—</b>`;
+  };
+  m.level.onchange = m.position.onchange = upd; upd();
+  const inp = $("#spick", m), list = $("#plist", m);
+  inp.oninput = () => {
+    const q = inp.value.trim().toLowerCase(); m.student.value = "";
+    const hits = db.students.filter(s => !q || s.name.toLowerCase().includes(q) || s.studentId.toLowerCase().includes(q)).slice(0, 8);
+    list.innerHTML = hits.map(s => `<button type="button" data-pick="${s.id}">${esc(s.name)} <span class="muted">${esc(s.studentId)} · Grade ${cls(s)}</span></button>`).join("") || `<div class="empty" style="padding:.8rem">No student found</div>`;
+    list.classList.remove("hidden");
+  };
+  inp.onfocus = inp.oninput;
+  list.onmousedown = e => { const b = e.target.closest("[data-pick]"); if (!b) return; e.preventDefault(); const s = studentById(b.dataset.pick); m.student.value = s.id; inp.value = `${s.name} (${s.studentId})`; list.classList.add("hidden"); };
+  inp.onblur = () => setTimeout(() => list.classList.add("hidden"), 120);
+}
+
+function confirmDel(kind, id) {
+  const isS = kind === "student", item = isS ? studentById(id) : db.achievements.find(a => a.id === id);
+  const n = isS ? db.achievements.filter(a => a.student === id).length : 0;
+  modal(`Delete ${kind}?`, `<p>${isS ? `This deletes <b>${esc(item.name)}</b> and their ${n} achievement${n === 1 ? "" : "s"}.` : `This deletes <b>${esc(item.title)}</b>.`} This can’t be undone.</p>`, "Delete", () => {
+    if (isS) { db.achievements = db.achievements.filter(a => a.student !== id); db.students = db.students.filter(s => s.id !== id); if (S.view === "profile") S.view = "students"; }
+    else db.achievements = db.achievements.filter(a => a.id !== id);
+    save(); close(); render(); toast(isS ? "Student deleted" : "Achievement deleted");
+  }, true);
+}
+
+function exportCSV() {
+  const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const lines = [["Student ID", "Student", "Grade", "Title", "Level", "Result", "Points"].map(q).join(",")];
+  achRows().forEach(a => { const s = studentById(a.student); lines.push([s?.studentId, s?.name, s?.grade, a.title, a.level, a.position, a.points].map(q).join(",")); });
+  const csv = lines.join("\n");
+  (async () => {
+    const dl = window.claude ? await window.claude.use("downloads").catch(() => null) : null;
+    if (dl) { try { await dl.save({ filename: "achievements.csv", data: csv }); return; } catch { return; } }
+    try { const u = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); const a = document.createElement("a"); a.href = u; a.download = "achievements.csv"; a.click(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch { toast("Download is not available here"); }
+  })();
+}
+
+(async () => {
+  await load();
+  try { const id = sessionStorage.getItem("saars_user"); const u = id && db.users.find(x => x.id === id); if (u) S.user = { id: u.id, name: u.name, email: u.email }; } catch {}
+  render();
+})();
+</script>
+</body>
+</html>
